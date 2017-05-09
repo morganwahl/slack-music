@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 
 
@@ -17,10 +19,10 @@ def get_tune_from_jabber_file():
         'jabber',
     )
     if not os.path.exists(jabber_file):
-        return u''
+        return ''
     tune = objectify.parse(jabber_file).getroot()
     os.unlink(jabber_file)
-    return u"{}: {}".format(tune.artist, tune.title)
+    return "{}: {}".format(tune.artist, tune.title)
 
 
 def get_tune_from_quodlibet():
@@ -29,9 +31,9 @@ def get_tune_from_quodlibet():
         return subprocess.check_output((
             'quodlibet',
             '--print-playing', '<artist>: <title>',
-        )).strip()
+        )).decode('utf8').strip()
     except subprocess.CalledProcessError:
-        return u''
+        return ''
 
 
 def set_status(text='', emoji=''):
@@ -43,7 +45,7 @@ def set_status(text='', emoji=''):
     # print slack.users.profile.get()
     status = json.dumps({
         'status_text': text,
-        u'status_emoji': emoji,
+        'status_emoji': emoji,
     })
     # print status
     slack.users.profile.set(profile=status)
@@ -53,10 +55,10 @@ def main():
     tune = get_tune_from_quodlibet()
     if tune:
         message = tune
-        emoji = u':musical_note:'
+        emoji = ':musical_note:'
     else:
-        message = u''
-        emoji = u''
+        message = ''
+        emoji = ''
     set_status(text=message, emoji=emoji)
 
 
