@@ -2,8 +2,15 @@
 
 import os
 
+import logging
+L = logging.getLogger(__name__)
+logging.basicConfig(level=logging.WARN)
+
+L.debug('__main__')
+
 
 def get_tune_from_jabber_file():
+    L.debug("get_tune_from_jabber_file")
     from lxml import objectify
 
     # <tune xmlns='http://jabber.org/protocol/tune'>
@@ -26,8 +33,10 @@ def get_tune_from_jabber_file():
 
 
 def get_tune_from_quodlibet():
+    L.debug("get_tune_from_quodlibet")
     import subprocess
     try:
+        L.debug("running quodlibet")
         return subprocess.check_output((
             'quodlibet',
             '--print-playing', '<artist>: <title>',
@@ -37,6 +46,7 @@ def get_tune_from_quodlibet():
 
 
 def set_status(text='', emoji=''):
+    L.debug("set_status %r %r", text, emoji)
     import json
     from slacker import Slacker
     token = os.environ['SLACK_SECRET_TOKEN']
@@ -52,6 +62,7 @@ def set_status(text='', emoji=''):
 
 
 def main():
+    L.debug("main")
     tune = get_tune_from_quodlibet()
     if tune:
         message = tune
