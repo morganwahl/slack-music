@@ -40,7 +40,10 @@ def get_tune_from_quodlibet():
         return subprocess.check_output((
             'quodlibet',
             '--print-playing', '<artist>: <title>',
-        )).decode('utf8').strip()
+            # quodlibet sometimes prints spurious error messages on stderr.
+            # Make sure those don't get printed since we're running in a cron
+            # job.
+        ), stderr=subprocess.DEVNULL).decode('utf8').strip()
     except subprocess.CalledProcessError:
         return ''
 
