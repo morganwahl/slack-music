@@ -39,7 +39,7 @@ def get_tune_from_quodlibet():
         L.debug("running quodlibet")
         return subprocess.check_output((
             'quodlibet',
-            '--print-playing', '<artist>: <title>',
+            '--print-playing', '<~year|[<~year>] |><artist>: <title>',
             # quodlibet sometimes prints spurious error messages on stderr.
             # Make sure those don't get printed since we're running in a cron
             # job.
